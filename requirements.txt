@@ -9,6 +9,6 @@ requests
 pypdf
 tiktoken
 langchain-text-splitters
-langchain-google-genai
-google-generativeai
+langchain-google-genai>=2.0.0
+google-generativeai>=0.8.0
 faiss-cpu

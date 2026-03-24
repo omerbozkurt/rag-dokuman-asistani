@@ -8,25 +8,25 @@ from rag_backend.config import Config
 
 class JSONVectorDB:
     def __init__(self):
-        # 404 hatalarına karşı korumalı (resilient) model yükleme
+        # 404 hatalarına karşı en güncel ve stabil yapılandırma
         self.google_api_key = Config.GOOGLE_API_KEY
         try:
-            # Önce en yeni modeli dene
+            # 1. Tercih: Yeni nesil Gemini Embedding Modeli (En stabil olan)
             self.embeddings = GoogleGenerativeAIEmbeddings(
-                model="text-embedding-004",
+                model="models/gemini-embedding-001",
+                task_type="retrieval_document",
                 google_api_key=self.google_api_key
             )
-            # Test amaçlı küçük bir vektörleştirme dene (hata var mı kontrol et)
             self.embeddings.embed_query("test")
         except Exception:
             try:
-                # Olmazsa en stabil olanı dene
+                # 2. Tercih: Alternatif model (Task type ile)
                 self.embeddings = GoogleGenerativeAIEmbeddings(
-                    model="embedding-001",
+                    model="models/text-embedding-004",
+                    task_type="retrieval_document",
                     google_api_key=self.google_api_key
                 )
             except Exception as e:
-                # Hiçbiri olmazsa hatayı göster
                 raise Exception(f"Vektörleştirme modellerine erişilemedi: {str(e)}")
 
     def load_from_json(self, json_file: str):
