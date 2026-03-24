@@ -8,11 +8,26 @@ from rag_backend.config import Config
 
 class JSONVectorDB:
     def __init__(self):
-        # Google'ın döküman vektörleştirme modeli
-        self.embeddings = GoogleGenerativeAIEmbeddings(
-            model="text-embedding-004",
-            google_api_key=Config.GOOGLE_API_KEY
-        )
+        # 404 hatalarına karşı korumalı (resilient) model yükleme
+        self.google_api_key = Config.GOOGLE_API_KEY
+        try:
+            # Önce en yeni modeli dene
+            self.embeddings = GoogleGenerativeAIEmbeddings(
+                model="text-embedding-004",
+                google_api_key=self.google_api_key
+            )
+            # Test amaçlı küçük bir vektörleştirme dene (hata var mı kontrol et)
+            self.embeddings.embed_query("test")
+        except Exception:
+            try:
+                # Olmazsa en stabil olanı dene
+                self.embeddings = GoogleGenerativeAIEmbeddings(
+                    model="embedding-001",
+                    google_api_key=self.google_api_key
+                )
+            except Exception as e:
+                # Hiçbiri olmazsa hatayı göster
+                raise Exception(f"Vektörleştirme modellerine erişilemedi: {str(e)}")
 
     def load_from_json(self, json_file: str):
         """JSON dosyasını okur ve FAISS vektör veritabanına yükler."""
