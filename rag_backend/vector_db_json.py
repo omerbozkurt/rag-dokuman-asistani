@@ -10,7 +10,7 @@ class JSONVectorDB:
     def __init__(self):
         # Google'ın döküman vektörleştirme modeli
         self.embeddings = GoogleGenerativeAIEmbeddings(
-            model="models/embedding-001",
+            model="models/text-embedding-004",
             google_api_key=Config.GOOGLE_API_KEY
         )
 

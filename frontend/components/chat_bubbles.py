@@ -1,16 +1,22 @@
 import streamlit as st
 
 def chat_message_html(role, content, sources=None):
-    """WhatsApp/ChatGPT tarzı chat baloncukları oluşturur."""
+    """Modern ve şık chat baloncukları oluşturur."""
     is_user = role == "user"
     bubble_class = "user-bubble" if is_user else "assistant-bubble"
+    label_class = "user-label" if is_user else "assistant-label"
+    label_text = "SİZ" if is_user else "ASİSTAN"
+    icon = "👤" if is_user else "🤖"
     
     source_html = ""
     if sources:
-        source_html = f'<span class="source-tag">📚 Kaynak: {", ".join(sources)}</span>'
+        source_html = f'<div class="source-tag">📚 Kaynaklar: {", ".join(sources)}</div>'
         
     html = f"""
-    <div style="display: flex; flex-direction: column;">
+    <div style="display: flex; flex-direction: column; width: 100%; align-items: {'flex-end' if is_user else 'flex-start'};">
+        <div class="role-label" style="text-align: {'right' if is_user else 'left'};">
+            {icon if not is_user else ""} {label_text} {icon if is_user else ""}
+        </div>
         <div class="bubble {bubble_class}">
             {content}
             {source_html}

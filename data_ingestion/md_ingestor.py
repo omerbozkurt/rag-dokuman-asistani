@@ -3,6 +3,8 @@ import json
 import logging
 from pathlib import Path
 from typing import List, Dict, Any
+from io import BytesIO
+from pypdf import PdfReader
 from langchain_text_splitters import RecursiveCharacterTextSplitter
 
 # Logging konfigürasyonu
@@ -29,9 +31,38 @@ class MarkdownIngestor:
                 return line.replace("# ", "").strip()
         return "Başlıksız Döküman"
 
+    def process_text(self, content: str, filename: str) -> List[Dict[str, Any]]:
+        """Verilen metni parçalara böler ve döküman listesi döndürür."""
+        processed_chunks = []
+        title = self.extract_title(content)
+        
+        # Metni parçalara böl
+        chunks = self.text_splitter.split_text(content)
+
+        for i, chunk in enumerate(chunks):
+            processed_chunks.append({
+                "id": f"{filename}_{i}",
+                "text": chunk,
+                "metadata": {
+                    "source": filename,
+                    "title": title,
+                    "chunk_index": i
+                }
+            })
+        return processed_chunks
+
+    def process_pdf(self, file_bytes: bytes, filename: str) -> List[Dict[str, Any]]:
+        """PDF dosyasından metinleri çıkarır ve parçalara böler."""
+        reader = PdfReader(BytesIO(file_bytes))
+        content = ""
+        for page in reader.pages:
+            content += page.extract_text() + "\n"
+        
+        return self.process_text(content, filename)
+
     def process_folder(self, input_folder: str) -> List[Dict[str, Any]]:
         """Klasördeki tüm .md dosyalarını işler."""
-        processed_data = []
+        all_processed_data = []
         folder_path = Path(input_folder)
 
         if not folder_path.exists():
@@ -45,29 +76,16 @@ class MarkdownIngestor:
                 with open(md_file, "r", encoding="utf-8") as f:
                     content = f.read()
 
-                title = self.extract_title(content)
-                filename = md_file.name
-
-                # Metni parçalara böl
-                chunks = self.text_splitter.split_text(content)
-
-                for i, chunk in enumerate(chunks):
-                    processed_data.append({
-                        "id": f"{filename}_{i}",
-                        "text": chunk,
-                        "metadata": {
-                            "source": filename,
-                            "title": title,
-                            "chunk_index": i
-                        }
-                    })
+                # Tekil dosya işleme mantığını kullan
+                file_chunks = self.process_text(content, md_file.name)
+                all_processed_data.extend(file_chunks)
                 
-                logger.info(f"Başarıyla işlendi: {filename} ({len(chunks)} parça)")
+                logger.info(f"Başarıyla işlendi: {md_file.name} ({len(file_chunks)} parça)")
 
             except Exception as e:
                 logger.error(f"'{md_file.name}' işlenirken hata oluştu: {str(e)}")
 
-        return processed_data
+        return all_processed_data
 
     def save_to_json(self, data: List[Dict[str, Any]], output_file: str):
         """İşlenen verileri JSON dosyasına kaydeder."""
@@ -76,7 +94,7 @@ class MarkdownIngestor:
             output_path.parent.mkdir(parents=True, exist_ok=True)
 
             with open(output_file, "w", encoding="utf-8") as f:
-                json.dump(data, f, ensure_all_ascii=False, indent=4)
+                json.dump(data, f, ensure_ascii=False, indent=4)
             
             logger.info(f"İşlem tamamlandı! Veriler '{output_file}' dosyasına kaydedildi. Toplam parça: {len(data)}")
 
