@@ -13,7 +13,7 @@ from rag_backend.config import Config
 class GeminiBridge:
     def __init__(self):
         self.llm = ChatGoogleGenerativeAI(
-            model="gemini-1.5-pro",
+            model="models/gemini-1.5-flash",
             google_api_key=Config.GOOGLE_API_KEY,
             temperature=0.3
         )
