@@ -1,11 +1,12 @@
 # 🤖 Doküman Asistanı (RAG)
 
-Bu proje, modern web framework dökümantasyonlarını (Next.js vb.) okuyup analiz edebilen, gelişmiş bir RAG (Retrieval-Augmented Generation) asistanıdır.
+Bu proje, yerel dökümanlarınızı (Markdown vb.) analiz edebilen ve onları kaynak göstererek sorularınızı yanıtlayan gelişmiş bir **RAG (Retrieval-Augmented Generation)** asistanıdır.
 
 ## 🚀 Özellikler
-- **Premium UI/UX**: Streamlit üzerine enjekte edilmiş özel CSS ile karanlık mod ve akıcı animasyonlar.
-- **Esnek Veri Kaynağı**: Web URL'lerinden veya yerel PDF dosyalarından veri çekebilir.
-- **Gelişmiş RAG**: LangChain ve OpenAI kullanarak dökümanları anlamlandırır.
+- **Google Gemini AI**: Soruları yanıtlamak için en güncel ve güçlü yapay zeka modellerinden birini kullanır.
+- **FAISS Vektör DB**: Dökümanlar içinde milisaniyeler içinde arama yapar.
+- **Premium UI/UX**: Streamlit ve özel CSS ile modern, akıcı ve kullanıcı dostu bir arayüz.
+- **Kaynak Gösterme**: Verdiği her yanıt için dökümanın hangi kısmından yararlandığını belirtir.
 
 ## 🛠️ Kurulum
 
@@ -14,20 +15,25 @@ Bu proje, modern web framework dökümantasyonlarını (Next.js vb.) okuyup anal
    pip install -r requirements.txt
    ```
 
-2. `.env` dosyasını düzenleyin ve OpenAI API anahtarınızı ekleyin:
+2. `.env` dosyasını oluşturun ve Google API anahtarınızı ekleyin:
    ```text
-   OPENAI_API_KEY=sk-....
+   GOOGLE_API_KEY=AIzaSy...
    ```
 
-3. Uygulamayı başlatın:
+3. Dökümanları işleyin (İlk çalıştırmada):
+   ```bash
+   python data_ingestion/md_ingestor.py
+   ```
+
+4. Uygulamayı başlatın:
    ```bash
    streamlit run frontend/app.py
    ```
 
 ## 📂 Dosya Yapısı
-- `data_ingestion/`: Veri çekme ve işleme (loader, splitter).
-- `rag_backend/`: Vektör veritabanı (ChromaDB) ve LLM orkestrasyonu.
-- `frontend/`: Streamlit arayüzü ve özel CSS animasyonları.
+- `data_ingestion/`: Markdown dosyalarını okuma, parçalama ve JSON olarak hazırlama.
+- `rag_backend/`: Gemini entegrasyonu, FAISS vektör veritabanı yönetimi ve konfigürasyon.
+- `frontend/`: Streamlit chat arayüzü, özel CSS animasyonları ve bileşenler.
 
 ---
 *Üniversite Veri Biliminde İleri Programlama Dersi için geliştirilmiştir.*
