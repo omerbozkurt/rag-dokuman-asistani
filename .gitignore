@@ -1,0 +1,21 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+.venv
+venv/
+ENV/
+env/
+.env
+
+# Streamlit
+.streamlit/
+
+# Data
+# data/processed_docs.json # Uncomment if you want to exclude processed data
+# data/vector_store/
+
+# IDEs
+.vscode/
+.idea/
+.DS_Store

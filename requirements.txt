@@ -1,0 +1,14 @@
+streamlit
+langchain
+langchain-community
+langchain-openai
+chromadb
+python-dotenv
+beautifulsoup4
+requests
+pypdf
+tiktoken
+langchain-text-splitters
+langchain-google-genai
+google-generativeai
+faiss-cpu
