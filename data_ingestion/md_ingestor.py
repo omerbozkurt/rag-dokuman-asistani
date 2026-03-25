@@ -17,24 +17,31 @@ class MarkdownIngestor:
     metadata ile birlikte JSON formatında dışa aktaran sınıf.
     """
 
-    def __init__(self, chunk_size: int = 1500, chunk_overlap: int = 200):
+    def __init__(self, chunk_size: int = 1000, chunk_overlap: int = 150): # Chunk size'ı biraz küçülterek daha hassas arama sağladık
         self.text_splitter = RecursiveCharacterTextSplitter(
             chunk_size=chunk_size,
             chunk_overlap=chunk_overlap,
-            separators=["\n## ", "\n### ", "\n#### ", "\n", " ", ""]
+            separators=["\n\n", "\n", ". ", " ", ""] # PDF dostu ayırıcılar eklendi
         )
 
     def extract_title(self, content: str) -> str:
-        """Markdown içeriğinden ilk # başlığını çıkarır."""
-        for line in content.split("\n"):
+        """İçerikten başlık çıkarır (MD veya PDF metni)."""
+        lines = [line.strip() for line in content.split("\n") if line.strip()]
+        for line in lines:
             if line.startswith("# "):
                 return line.replace("# ", "").strip()
+            # PDF'ler için ilk anlamlı satırı başlık kabul et (max 100 karakter)
+            if len(line) > 5 and len(line) < 100:
+                return line
         return "Başlıksız Döküman"
 
     def process_text(self, content: str, filename: str) -> List[Dict[str, Any]]:
         """Verilen metni parçalara böler ve döküman listesi döndürür."""
         processed_chunks = []
         title = self.extract_title(content)
+        
+        # Gereksiz boşlukları temizle
+        content = "\n".join([line.strip() for line in content.split("\n")])
         
         # Metni parçalara böl
         chunks = self.text_splitter.split_text(content)
@@ -52,13 +59,23 @@ class MarkdownIngestor:
         return processed_chunks
 
     def process_pdf(self, file_bytes: bytes, filename: str) -> List[Dict[str, Any]]:
-        """PDF dosyasından metinleri çıkarır ve parçalara böler."""
-        reader = PdfReader(BytesIO(file_bytes))
-        content = ""
-        for page in reader.pages:
-            content += page.extract_text() + "\n"
-        
-        return self.process_text(content, filename)
+        """PDF dosyasından metinleri temizleyerek çıkarır ve parçalara böler."""
+        try:
+            reader = PdfReader(BytesIO(file_bytes))
+            content = ""
+            for i, page in enumerate(reader.pages):
+                page_text = page.extract_text()
+                if page_text:
+                    content += f"\n--- SAYFA {i+1} ---\n" + page_text + "\n"
+            
+            if not content.strip():
+                logger.warning(f"{filename} içeriği boş veya imaj tabanlı bir PDF.")
+                return []
+                
+            return self.process_text(content, filename)
+        except Exception as e:
+            logger.error(f"PDF işlenirken hata: {str(e)}")
+            return []
 
     def process_folder(self, input_folder: str) -> List[Dict[str, Any]]:
         """Klasördeki tüm .md dosyalarını işler."""

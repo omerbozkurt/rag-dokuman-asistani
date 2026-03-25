@@ -1,167 +1,236 @@
 /* 
-    Luxury Dark - Elite RAG UI
-    Theme: Deep Space Obsidian (Mesh Gradients & Ultra-Glassmorphism)
+    Premium RAG UI - "Midnight Aurora 2.0"
+    Theme: Deep Space Obsidian with Ultra-Glassmorphism
+    Architecture: Systematic Variable-Driven Design
 */
 
 @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap');
 
 :root {
+    /* Core Palette */
     --primary: #6366f1;
-    --primary-bright: #818cf8;
+    --primary-glow: rgba(99, 102, 241, 0.5);
     --secondary: #a855f7;
     --accent: #22d3ee;
+    --success: #10b981;
+    --error: #ef4444;
+    
+    /* Surface Palette */
     --bg-dark: #030712;
-    --card-bg: rgba(17, 24, 39, 0.7);
-    --glass-border: rgba(255, 255, 255, 0.1);
-    --glass-highlight: rgba(255, 255, 255, 0.05);
+    --card-bg: rgba(17, 24, 39, 0.6);
+    --sidebar-bg: rgba(3, 7, 18, 0.4);
+    
+    /* Glassmorphism Tokens */
+    --glass-border: rgba(255, 255, 255, 0.08);
+    --glass-border-heavy: rgba(255, 255, 255, 0.15);
+    --glass-highlight: rgba(255, 255, 255, 0.03);
+    --glass-blur: blur(20px) saturate(160%);
+    
+    /* Typography */
     --text-primary: #f8fafc;
-    --text-secondary: #cbd5e1;
+    --text-secondary: #94a3b8;
     --text-muted: #64748b;
+    
+    /* Spacing */
+    --space-xs: 0.5rem;   /* 8px */
+    --space-sm: 1rem;     /* 16px */
+    --space-md: 1.5rem;   /* 24px */
+    --space-lg: 2.5rem;   /* 40px */
+    
+    /* Shadows */
+    --shadow-premium: 0 20px 50px -12px rgba(0, 0, 0, 0.7);
+    --shadow-glow: 0 0 20px rgba(99, 102, 241, 0.2);
 }
 
+/* Base Reset & App Layout */
 .stApp {
     background: 
-        radial-gradient(at 0% 0%, rgba(67, 56, 202, 0.15) 0px, transparent 50%),
-        radial-gradient(at 100% 0%, rgba(126, 34, 206, 0.15) 0px, transparent 50%),
-        radial-gradient(at 100% 100%, rgba(20, 184, 166, 0.1) 0px, transparent 50%),
-        radial-gradient(at 0% 100%, rgba(59, 130, 246, 0.1) 0px, transparent 50%),
+        radial-gradient(at 0% 0%, rgba(67, 56, 202, 0.12) 0px, transparent 40%),
+        radial-gradient(at 100% 0%, rgba(126, 34, 206, 0.12) 0px, transparent 40%),
+        radial-gradient(at 50% 50%, rgba(34, 211, 238, 0.05) 0px, transparent 50%),
         var(--bg-dark) !important;
     color: var(--text-primary);
     font-family: 'Plus Jakarta Sans', sans-serif;
 }
 
-/* Sidebar - Luxury Glass */
-[data-testid="stSidebar"] {
-    background: rgba(3, 7, 18, 0.4) !important;
-    backdrop-filter: blur(25px) saturate(180%);
-    border-right: 1px solid var(--glass-border);
-}
-
-.sidebar-title {
+/* Typography Hierarchy */
+h1, h2, h3, .sidebar-title {
     font-family: 'Outfit', sans-serif;
-    font-size: 1.8rem;
-    font-weight: 900;
-    letter-spacing: -0.05em;
-    background: linear-gradient(135deg, #fff 0%, #94a3b8 100%);
-    -webkit-background-clip: text;
-    background-clip: text;
-    -webkit-text-fill-color: transparent;
-    margin-bottom: 0.5rem;
+    letter-spacing: -0.04em;
 }
 
-.sidebar-text {
-    font-size: 0.9rem;
-    color: var(--text-muted);
-    font-weight: 400;
-    line-height: 1.5;
-}
-
-/* Main Container Adjustments */
-.main .block-container {
-    max-width: 900px;
-    padding: 4rem 2rem;
-}
-
-/* Message Bubbles - Refined Glass */
-.bubble {
-    border-radius: 24px;
-    padding: 18px 24px;
-    font-size: 1.05rem;
-    line-height: 1.6;
-    margin-bottom: 24px;
-    position: relative;
-    border: 1px solid var(--glass-border);
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-.user-bubble {
-    background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
-    color: white;
-    border-bottom-right-radius: 4px;
-    box-shadow: 0 15px 35px -10px rgba(79, 70, 229, 0.4);
-    border: 1px solid rgba(255, 255, 255, 0.2);
-    align-self: flex-end;
-}
-
-.assistant-bubble {
-    background: var(--card-bg);
-    backdrop-filter: blur(12px);
-    color: var(--text-primary);
-    border-bottom-left-radius: 4px;
-    box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.5);
-    align-self: flex-start;
-}
-
-.assistant-bubble::after {
-    content: '';
-    position: absolute;
-    inset: 0;
-    border-radius: 24px;
-    padding: 1px;
-    background: linear-gradient(135deg, var(--glass-border), transparent, var(--glass-border));
-    -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-    mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-    -webkit-mask-composite: xor;
-    mask-composite: exclude;
-}
-
-/* Labels */
-.role-label {
-    font-family: 'Outfit', sans-serif;
-    font-size: 0.7rem;
-    font-weight: 800;
-    text-transform: uppercase;
-    letter-spacing: 0.15em;
-    margin-bottom: 8px;
-    opacity: 0.6;
-}
-
-/* Header - Dramatic Modernity */
 h1 {
-    font-family: 'Outfit', sans-serif;
+    font-size: 3.5rem !important;
     font-weight: 900;
-    font-size: 4rem !important;
-    letter-spacing: -0.06em;
-    line-height: 0.9 !important;
-    background: linear-gradient(to bottom, #fff 0%, #64748b 100%);
+    background: linear-gradient(to bottom, #fff 20%, #94a3b8 180%);
     -webkit-background-clip: text;
     background-clip: text;
     -webkit-text-fill-color: transparent;
-    filter: drop-shadow(0 10px 20px rgba(0,0,0,0.5));
-    margin-bottom: 1rem !important;
+    filter: drop-shadow(0 10px 10px rgba(0,0,0,0.3));
+    margin-bottom: var(--space-xs) !important;
 }
 
 .tagline {
     font-family: 'Outfit', sans-serif;
     color: var(--accent);
-    font-weight: 500;
-    font-size: 1.2rem;
-    letter-spacing: 0.05em;
+    font-weight: 600;
+    font-size: 1.1rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
     opacity: 0.8;
 }
 
-/* Chat Input Overhaul */
+/* Sidebar Styling */
+[data-testid="stSidebar"] {
+    background: var(--sidebar-bg) !important;
+    backdrop-filter: var(--glass-blur);
+    border-right: 1px solid var(--glass-border);
+}
+
+.sidebar-title {
+    font-size: 1.5rem;
+    font-weight: 800;
+    margin-bottom: var(--space-md);
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.system-status-card {
+    background: var(--glass-highlight);
+    border: 1px solid var(--glass-border);
+    border-radius: 16px;
+    padding: var(--space-sm);
+    margin-top: var(--space-md);
+}
+
+.status-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-size: 0.85rem;
+    color: var(--text-secondary);
+    margin-bottom: 0.5rem;
+}
+
+.status-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--success);
+    box-shadow: 0 0 10px var(--success);
+    animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+    0% { opacity: 0.4; transform: scale(0.9); }
+    50% { opacity: 1; transform: scale(1.1); }
+    100% { opacity: 0.4; transform: scale(0.9); }
+}
+
+/* Chat Bubble Enhancements */
+.chat-container {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-md);
+    margin-top: var(--space-lg);
+}
+
+.bubble {
+    position: relative;
+    max-width: 85%;
+    padding: 1.25rem 1.75rem;
+    border-radius: 24px;
+    font-size: 1.05rem;
+    line-height: 1.6;
+    border: 1px solid var(--glass-border);
+    transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
+}
+
+.user-bubble {
+    background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
+    color: white;
+    align-self: flex-end;
+    border-bottom-right-radius: 4px;
+    box-shadow: 0 10px 25px -5px rgba(79, 70, 229, 0.4);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.user-bubble:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 15px 30px -5px rgba(79, 70, 229, 0.5);
+}
+
+.assistant-bubble {
+    background: var(--card-bg);
+    backdrop-filter: var(--glass-blur);
+    align-self: flex-start;
+    border-bottom-left-radius: 4px;
+    box-shadow: var(--shadow-premium);
+}
+
+.assistant-bubble:hover {
+    border-color: var(--glass-border-heavy);
+    background: rgba(17, 24, 39, 0.7);
+}
+
+/* Source Tags */
+.source-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid var(--glass-border);
+}
+
+.source-tag {
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid var(--glass-border);
+    padding: 0.2rem 0.6rem;
+    border-radius: 100px;
+    font-size: 0.75rem;
+    color: var(--accent);
+    font-weight: 500;
+    transition: all 0.2s;
+}
+
+.source-tag:hover {
+    background: var(--accent);
+    color: var(--bg-dark);
+    transform: scale(1.05);
+}
+
+/* Chat Input Styling */
 .stChatInputContainer > div {
     background: rgba(15, 23, 42, 0.8) !important;
-    backdrop-filter: blur(15px);
+    backdrop-filter: var(--glass-blur);
     border: 1px solid var(--glass-border) !important;
-    border-radius: 20px !important;
-    padding: 5px !important;
-    box-shadow: 0 20px 50px -15px rgba(0, 0, 0, 0.7) !important;
+    border-radius: 24px !important;
+    padding: 8px !important;
+    transition: all 0.3s;
 }
 
-/* Animations */
-@keyframes reveal {
-    from { opacity: 0; transform: translateY(30px); filter: blur(10px); }
-    to { opacity: 1; transform: translateY(0); filter: blur(0); }
+.stChatInputContainer > div:focus-within {
+    border-color: var(--primary) !important;
+    box-shadow: var(--shadow-glow) !important;
 }
 
-.bubble { animation: reveal 0.6s cubic-bezier(0.16, 1, 0.3, 1) both; }
-
-/* Custom Scrollbar */
-::-webkit-scrollbar { width: 6px; }
+/* Scrollbar */
+::-webkit-scrollbar { width: 5px; }
 ::-webkit-scrollbar-track { background: transparent; }
-::-webkit-scrollbar-thumb { background: var(--glass-border); border-radius: 10px; }
+::-webkit-scrollbar-thumb { 
+    background: var(--glass-border-heavy); 
+    border-radius: 10px; 
+}
 ::-webkit-scrollbar-thumb:hover { background: var(--text-muted); }
+
+/* Animation: Reveal */
+@keyframes reveal {
+    from { opacity: 0; transform: translateY(20px) scale(0.98); filter: blur(10px); }
+    to { opacity: 1; transform: translateY(0) scale(1); filter: blur(0); }
+}
+
+.bubble { animation: reveal 0.5s cubic-bezier(0.23, 1, 0.32, 1) both; }
 
 
